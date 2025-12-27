@@ -7,6 +7,14 @@ A modern, production-ready admin dashboard template built with **Next.js 16**, *
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4.1.18-38bdf8?style=flat&logo=tailwind-css)
 
+## 📸 Preview
+
+![Dashboard Screenshot](./public/screenshots/dashboard-dark.png)
+
+<p align="center">
+  <em>Modern admin dashboard with dark theme, featuring real-time stats, interactive charts, and transaction management</em>
+</p>
+
 ---
 
 ## ✨ Features
