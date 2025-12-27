@@ -43,9 +43,14 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
           </svg>
         </button>
 
-        {/* App Name */}
+        {/* App Name - Responsive Text */}
+        {/* Mobile: "Admin" only (concise) */}
+        {/* Desktop/Tablet: "Admin Dashboard" (full) */}
         <div className="flex items-center gap-2">
-          <span className="text-xl font-bold text-primary">Admin Dashboard</span>
+          <span className="text-xl font-bold text-primary">
+            <span className="md:hidden">Admin</span>
+            <span className="hidden md:inline">Admin Dashboard</span>
+          </span>
         </div>
       </div>
 

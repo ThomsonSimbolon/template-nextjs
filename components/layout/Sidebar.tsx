@@ -16,9 +16,15 @@ import { usePathname } from 'next/navigation';
  * - Does NOT contain business logic
  * 
  * Responsive Behavior (using standard Tailwind breakpoints):
- * - Mobile (<768px): Off-canvas drawer, slides in/out
+ * - Mobile (<768px): Off-canvas drawer, 75% width, slides in/out
  * - Tablet (768-1279px): Collapsed, 60px width, icons only
  * - Desktop (≥1280px): Fixed, 240px width, always visible
+ * 
+ * UX Enhancements:
+ * - Close button (×) in mobile header for explicit affordance
+ * - Click overlay to close
+ * - Auto-close on menu item click
+ * - Smooth 250ms animation (ease-out)
  */
 
 interface SidebarProps {
@@ -62,23 +68,34 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Mobile Overlay - Only visible on mobile when open */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 xl:hidden"
-          onClick={onClose}
-        />
-      )}
+      {/* Mobile Overlay - Fades in/out smoothly with sidebar */}
+      <div
+        className={`
+          fixed inset-0 bg-black z-40 xl:hidden
+          transition-opacity duration-300 ease-in-out
+          ${isOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'}
+        `}
+        onClick={onClose}
+        aria-label="Close sidebar"
+      />
 
-      {/* Sidebar - Responsive behavior */}
-      {/* Mobile (<768px): Off-canvas drawer */}
+      {/* Sidebar - Smooth slide animation from left */}
+      {/* Mobile (<768px): Slides in from left (75% width) */}
       {/* Tablet (768-1279px): Collapsed (icons only) */}
       {/* Desktop (>=1280px): Expanded (always visible) */}
       <aside
-        className={`fixed top-0 left-0 h-screen bg-card border-r border-border z-50 transition-transform duration-300 ease-in-out w-64 ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:w-[60px] md:translate-x-0 xl:w-60 xl:translate-x-0`}
+        className={`
+          fixed top-0 left-0 h-screen bg-card border-r border-border z-50
+          transition-transform duration-300 ease-in-out
+          w-[75%] max-w-xs
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          md:w-[60px] md:translate-x-0
+          xl:w-60 xl:translate-x-0
+        `}
       >
-        {/* Logo/Brand */}
-        <div className="h-16 flex items-center px-4 border-b border-divider">
+        {/* Header with Logo + Close Button (Mobile Only) */}
+        <div className="h-16 flex items-center justify-between px-4 border-b border-divider">
+          {/* Logo/Brand */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-sm">AD</span>
@@ -87,6 +104,17 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               Admin
             </span>
           </div>
+
+          {/* Close Button - Only visible on mobile */}
+          <button
+            onClick={onClose}
+            className="xl:hidden p-1.5 rounded-lg hover:bg-elevated transition-colors"
+            aria-label="Close sidebar"
+          >
+            <svg className="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
         {/* Navigation */}
@@ -98,7 +126,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 key={item.name}
                 href={item.href}
                 onClick={() => {
-                  // Close mobile drawer on navigation
+                  // Auto-close mobile drawer on navigation
                   if (window.innerWidth < 768) {
                     onClose();
                   }
